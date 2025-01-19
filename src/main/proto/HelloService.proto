@@ -1,7 +1,5 @@
 syntax = "proto3";
-package cv.ejst.grpc.login;
-
-
+package cv.ejst.grpc.login.protos.generated.hello;
 
 option java_multiple_files = true; // var gerar classes em arquivos separados
 //option java_package = "cv.ejst.grpc.login.generated"; // nome do package para as classes geradas
