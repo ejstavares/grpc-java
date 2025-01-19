@@ -3,6 +3,9 @@ package cv.ejst.grpc.login;
 import cv.ejst.grpc.login.protos.generated.hello.HelloRequest;
 import cv.ejst.grpc.login.protos.generated.hello.HelloResponse;
 import cv.ejst.grpc.login.protos.generated.hello.HelloServiceGrpc;
+import cv.ejst.grpc.login.protos.generated.user.LoginRequest;
+import cv.ejst.grpc.login.protos.generated.user.LoginResponse;
+import cv.ejst.grpc.login.protos.generated.user.UserServiceGrpc;
 import cv.ejst.grpc.login.services.HelloServiceImpl;
 import cv.ejst.grpc.login.services.UserServiceImpl;
 import io.grpc.ManagedChannel;
@@ -37,6 +40,15 @@ public class GrpcClient {
         HelloResponse helloResponse = stub.hello(helloRequest);
 
         logger.info("Response::::::::::::::::::::::::: "+helloResponse.getGreeting());
+
+        //User RPC
+        UserServiceGrpc.UserServiceBlockingStub userStub = UserServiceGrpc.newBlockingStub(channel);
+
+        var loginRequest = LoginRequest.newBuilder()
+                .setUsername("eder")
+                .setPassword("123e").build();
+        var loginResponse = userStub.login(loginRequest);
+        logger.info("Response::::::::::::::::::::::::: "+loginResponse.getResponseMessage()+ ", code::::"+loginResponse.getResponseCode());
         logger.info("Shutdown the Channel");
         channel.shutdown();
         logger.info(" Channel is closed ");
