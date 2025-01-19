@@ -1,0 +1,23 @@
+syntax = "proto3";
+package proto;
+
+option java_multiple_files = true; // var gerar classes em arquivos separados
+option java_package = "cv.ejst.grpc.login.generated"; // nome do package para as classes geradas
+option java_outer_classname = "UserProtos"; // nome da classe gerada
+
+/*service user {
+  rpc login(LoginRequest) returns (LoginResponse);
+  rpc logout(Empty) returns (LoginResponse);
+}*/
+
+message LoginRequest {
+  string username = 1; // a numeração da ordem dos parametros
+  string password = 2;
+}
+
+message LoginResponse {
+  string responseMessage = 1;
+  int32 responseCode = 2;
+}
+
+//message Empty {}
