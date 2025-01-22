@@ -4,18 +4,13 @@ import cv.ejst.grpc.login.protos.generated.hello.HelloRequest;
 import cv.ejst.grpc.login.protos.generated.hello.HelloResponse;
 import cv.ejst.grpc.login.protos.generated.hello.HelloServiceGrpc;
 import cv.ejst.grpc.login.protos.generated.user.LoginRequest;
-import cv.ejst.grpc.login.protos.generated.user.LoginResponse;
 import cv.ejst.grpc.login.protos.generated.user.UserServiceGrpc;
-import cv.ejst.grpc.login.services.HelloServiceImpl;
-import cv.ejst.grpc.login.services.UserServiceImpl;
-import io.grpc.ManagedChannel;
-import io.grpc.ManagedChannelBuilder;
-import io.grpc.Server;
-import io.grpc.ServerBuilder;
-import io.grpc.stub.StreamObserver;
+import io.grpc.*;
+import java.util.concurrent.Executor;
 
 import java.io.IOException;
 import java.util.logging.Logger;
+import static io.grpc.Metadata.ASCII_STRING_MARSHALLER;
 
 public class GrpcClient {
     private static final Logger logger = Logger.getLogger(GrpcClient.class.getName());
@@ -36,8 +31,15 @@ public class GrpcClient {
 
         logger.info("Say hello to server");
 
-
-        HelloResponse helloResponse = stub.hello(helloRequest);
+        var callCredentials = new CallCredentials() {
+            @Override
+            public void applyRequestMetadata(RequestInfo requestInfo, Executor appExecutor, MetadataApplier applier) {
+                Metadata metadata = new Metadata();
+                metadata.put(Metadata.Key.of("Authorization", ASCII_STRING_MARSHALLER), "Bearer access-token:fdgfdghgdhdghfdfgdsfgghfgfhg:+1");
+                applier.apply(metadata);
+            }
+        };
+        HelloResponse helloResponse = stub.withCallCredentials(callCredentials).hello(helloRequest);
 
         logger.info("Response::::::::::::::::::::::::: "+helloResponse.getGreeting());
 
@@ -47,7 +49,7 @@ public class GrpcClient {
         var loginRequest = LoginRequest.newBuilder()
                 .setUsername("eder")
                 .setPassword("123e").build();
-        var loginResponse = userStub.login(loginRequest);
+        var loginResponse = userStub.withCallCredentials(callCredentials).login(loginRequest);
         logger.info("Response::::::::::::::::::::::::: "+loginResponse.getResponseMessage()+ ", code::::"+loginResponse.getResponseCode());
         logger.info("Shutdown the Channel");
         channel.shutdown();

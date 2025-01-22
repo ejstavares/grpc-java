@@ -1,7 +1,5 @@
 package cv.ejst.grpc.login.services;
 
-
-import cv.ejst.grpc.login.GrpcServer;
 import cv.ejst.grpc.login.protos.generated.hello.HelloRequest;
 import cv.ejst.grpc.login.protos.generated.hello.HelloResponse;
 import cv.ejst.grpc.login.protos.generated.hello.HelloServiceGrpc;

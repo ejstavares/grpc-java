@@ -8,6 +8,7 @@ import io.grpc.ServerBuilder;
 
 import java.io.IOException;
 import java.util.logging.Logger;
+import cv.ejst.grpc.login.auth.OAuth2ServerInterceptor;
 
 public class GrpcServer {
     private static final Logger logger = Logger.getLogger(GrpcServer.class.getName());
@@ -17,6 +18,7 @@ public class GrpcServer {
                 .addService(new UserServiceImpl())
                 .addService(new HelloServiceImpl())
                 .addService(new StockQuoteProviderImpl())
+                .intercept(new OAuth2ServerInterceptor())
                 .build();
 
         server.start();
